@@ -29,6 +29,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	implementation name: 'Jobs'
+	implementation name: 'CCS'
 }
 
 test {
