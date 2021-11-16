@@ -15,12 +15,14 @@ public class ECSService {
 
     @KafkaListener(topics = "kafka_job")
     public void getFromKafka(Job job){
+        UserCredentials uc = getUserCredentials(job);
+    }
 
+    private UserCredentials getUserCredentials(Job job) {
         final String uri = ccsAddress + job.getName_of_site();
         System.out.println(uri);
         RestTemplate restTemplate = new RestTemplate();
-        UserCredentials uc = restTemplate.getForObject(uri, UserCredentials.class);
-
+        return restTemplate.getForObject(uri, UserCredentials.class);
     }
 
 }
