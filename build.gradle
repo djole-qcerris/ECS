@@ -30,6 +30,7 @@ dependencies {
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	implementation name: 'Jobs'
 	implementation name: 'CCS'
+	implementation name: 'firstproject'
 }
 
 test {
