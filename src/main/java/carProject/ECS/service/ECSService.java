@@ -1,6 +1,8 @@
 package carProject.ECS.service;
 
 import carProject.CCS.models.UserCredentials;
+import carProject.ECS.Mapper.Mapper;
+import carProject.ECS.dto.CarJobDTO;
 import com.example.Jobs.model.Job;
 import com.firstexample.demo.dto.ListOfCarsDTO;
 import com.firstexample.demo.model.Car;
@@ -16,12 +18,13 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ECSService {
 
     @Autowired
-    private KafkaTemplate<String, Car> kafkaTemplate;
+    private KafkaTemplate<String, CarJobDTO> kafkaTemplate;
     private static final String TOPIC = "car_consumer";
 
     @Value("${ccs.server.address}")
@@ -31,7 +34,7 @@ public class ECSService {
     public void getFromKafka(Job job) throws UnsupportedEncodingException {
         UserCredentials uc = getUserCredentials(job);
         List<Car> cars = getCars(uc,job);
-        sendCars(cars);
+        sendCars(cars,job);
     }
 
     private UserCredentials getUserCredentials(Job job) {
@@ -52,15 +55,19 @@ public class ECSService {
     }
 
     private List<Car> getCars(UserCredentials uc, Job job) throws UnsupportedEncodingException {
-        final String uri = uc.getApi_url() + makeQueryFromJob(job);
-        System.out.println(uri);
-        RestTemplate restTemplate = new RestTemplate();
-        return (List<Car>) restTemplate.getForObject(uri, ListOfCarsDTO.class).getCars();
+        return (new Mapper()).get_Client(uc.getName()).get_Cars(job,uc);
+      //  final String uri = uc.getApi_url() + makeQueryFromJob(job);
+       // System.out.println(uri);
+       // RestTemplate restTemplate = new RestTemplate();
+       // return (List<Car>) restTemplate.getForObject(uri, ListOfCarsDTO.class).getCars();
     }
 
-    private void sendCars(List<Car> cars){
+    private void sendCars(List<Car> cars,Job job){
+        System.out.println("Posiljka");
         for(Car car:cars){
-            kafkaTemplate.send(TOPIC,car);
+            System.out.println("poslato auto");
+            System.out.println(car);
+            kafkaTemplate.send(TOPIC,new CarJobDTO(job,car));
         }
     }
 

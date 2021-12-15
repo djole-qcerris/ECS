@@ -1,6 +1,7 @@
 package carProject.ECS.configs;
 
 
+import carProject.ECS.dto.CarJobDTO;
 import com.firstexample.demo.model.Car;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -22,7 +23,7 @@ import java.util.Map;
 @EnableKafka
 public class KafkaConfig {
     @Bean
-    public ProducerFactory<String, Car> producerFactory(){
+    public ProducerFactory<String, CarJobDTO> producerFactory(){
         Map<String, Object> config = new HashMap<String, Object>();
 
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
@@ -33,7 +34,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, Car> kafkaTemplate(){
+    public KafkaTemplate<String, CarJobDTO> kafkaTemplate(){
         return new KafkaTemplate<>(producerFactory());
     }
 
