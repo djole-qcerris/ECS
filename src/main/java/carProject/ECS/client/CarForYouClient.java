@@ -7,7 +7,9 @@ import carProject.ECS.response.transformer.CarForYouResponseTranformer;
 import carProject.ECS.transporter.CarForYouTransporter;
 import com.example.Jobs.model.Job;
 import com.firstexample.demo.model.Car;
+import org.apache.http.HttpResponse;
 import org.json.JSONObject;
+
 
 import java.util.List;
 
@@ -19,12 +21,14 @@ public class CarForYouClient extends Client {
         String[] values = job.getCriteria_value().split(";");
         for(int i=0;i<criteria.length;i++)
             params.put(criteria[i],values[i]);
-        CarForYouRequestTransformer cfyrqt=new CarForYouRequestTransformer();
-        CarForYouResponseTranformer cfyrst=new CarForYouResponseTranformer();
-        CarForYouTransporter cfyt=new CarForYouTransporter();
+        CarForYouRequestTransformer cfyrequesttransformer=new CarForYouRequestTransformer();
+        CarForYouResponseTranformer cfyresponsetransformer=new CarForYouResponseTranformer();
+        CarForYouTransporter cfytransporter=new CarForYouTransporter();
         CarFilter cf=new CarFilter();
-
-        return cf.get_Valid_Cars(params,cfyrst.get_Cars(cfyt.transport(cfyrqt.transform(params),uc)));
+        JSONObject httpjson=cfyrequesttransformer.transform(params);
+        HttpResponse httpresponse=cfytransporter.transport(httpjson,uc);
+        List<Car> cars=cfyresponsetransformer.get_Cars(httpresponse);
+        return cf.get_Valid_Cars(params,cars);
     }
 
 }
