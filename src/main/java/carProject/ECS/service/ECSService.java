@@ -56,10 +56,6 @@ public class ECSService {
 
     private List<Car> getCars(UserCredentials uc, Job job) throws UnsupportedEncodingException {
         return (new Mapper()).get_Client(uc.getName()).get_Cars(job,uc);
-      //  final String uri = uc.getApi_url() + makeQueryFromJob(job);
-       // System.out.println(uri);
-       // RestTemplate restTemplate = new RestTemplate();
-       // return (List<Car>) restTemplate.getForObject(uri, ListOfCarsDTO.class).getCars();
     }
 
     private void sendCars(List<Car> cars,Job job){
